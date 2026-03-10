@@ -1,4 +1,4 @@
-package com.gotooop.common.response;
+package com.gotooop.presentation.common.response;
 
 import java.time.LocalDateTime;
 
@@ -50,7 +50,6 @@ public final class ApiResponse<T> {
     }
 
     // Getters (Lombok을 사용하지 않으므로 직접 작성)
-
     public boolean isSuccess() {
         return success;
     }
