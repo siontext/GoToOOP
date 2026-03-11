@@ -1,11 +1,14 @@
 package com.gotooop.presentation.common.response;
 
+import com.gotooop.presentation.common.response.code.ErrorCode;
+import com.gotooop.presentation.common.response.code.ResultCode;
+import com.gotooop.presentation.common.response.code.SuccessCode;
 import java.time.LocalDateTime;
 
 /**
  * API 공통 응답 포맷 클래스.
  * 
- * <p>설계 원칙: Lombok 미사용, 불변성 유지, 제네릭 활용, 정적 팩토리 메서드 제공.</p>
+ * <p>설계 원칙: Lombok 미사용, 불변성 유지, 제네릭 활용, ResultCode 인터페이스를 통한 다형성 지원.</p>
  *
  * @param <T> 응답 데이터의 타입
  */
@@ -18,38 +21,38 @@ public final class ApiResponse<T> {
     private final LocalDateTime serverTime;
 
     /**
-     * private 생성자를 통해 외부에서 직접 생성을 제한하고 정적 팩토리 메서드 사용을 유도합니다.
+     * 내부 생성자를 통해 ResultCode 인터페이스로부터 상태 정보를 주입받습니다.
      */
-    private ApiResponse(boolean success, int code, String message, T data) {
+    private ApiResponse(boolean success, ResultCode resultCode, T data) {
         this.success = success;
-        this.code = code;
-        this.message = message;
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
         this.data = data;
         this.serverTime = LocalDateTime.now();
     }
 
     /**
-     * 성공 응답을 생성합니다. (메시지 기본값)
+     * 성공 응답을 생성합니다. (SuccessCode.OK 기본 사용)
      */
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(true, 200, "요청이 성공적으로 처리되었습니다.", data);
+        return success(data, SuccessCode.OK);
     }
 
     /**
-     * 성공 응답을 생성합니다. (메시지 커스텀)
+     * 성공 응답을 생성합니다. (구체적인 SuccessCode 지정)
      */
-    public static <T> ApiResponse<T> success(T data, String message) {
-        return new ApiResponse<>(true, 200, message, data);
+    public static <T> ApiResponse<T> success(T data, SuccessCode successCode) {
+        return new ApiResponse<>(true, successCode, data);
     }
 
     /**
-     * 실패 응답을 생성합니다.
+     * 실패 응답을 생성합니다. (구체적인 ErrorCode 지정)
      */
-    public static <T> ApiResponse<T> fail(int code, String message) {
-        return new ApiResponse<>(false, code, message, null);
+    public static <T> ApiResponse<T> fail(ErrorCode errorCode) {
+        return new ApiResponse<>(false, errorCode, null);
     }
 
-    // Getters (Lombok을 사용하지 않으므로 직접 작성)
+    // Getters
     public boolean isSuccess() {
         return success;
     }
