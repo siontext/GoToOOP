@@ -9,14 +9,7 @@ public enum ErrorCode implements ResultCode {
     // 공통 에러 (Common)
     BAD_REQUEST("ERR-COM-400", "잘못된 요청입니다."),
     NOT_FOUND("ERR-COM-404", "요청한 리소스를 찾을 수 없습니다."),
-    INTERNAL_SERVER_ERROR("ERR-COM-500", "서버 내부 오류가 발생했습니다."),
-    
-    // 유저 관련 에러 (User) - 예시
-    USER_NOT_FOUND("ERR-USER-001", "사용자를 찾을 수 없습니다."),
-    DUPLICATE_EMAIL("ERR-USER-002", "이미 존재하는 이메일입니다."),
-    
-    // 결제 관련 에러 (Payment) - 예시
-    INSUFFICIENT_BALANCE("ERR-PAY-001", "잔액이 부족합니다.");
+    INTERNAL_SERVER_ERROR("ERR-COM-500", "서버 내부 오류가 발생했습니다.");
 
     private final String code;
     private final String message;
