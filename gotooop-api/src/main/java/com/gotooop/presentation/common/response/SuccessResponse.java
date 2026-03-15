@@ -1,6 +1,5 @@
 package com.gotooop.presentation.common.response;
 
-import com.gotooop.presentation.common.response.code.SuccessCode;
 
 /**
  * 성공 응답 전용 레코드.
