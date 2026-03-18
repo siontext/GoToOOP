@@ -1,6 +1,6 @@
 package com.gotooop.presentation.common.response;
 
-import com.gotooop.presentation.common.response.code.ErrorCode;
+import com.gotooop.presentation.common.response.code.HttpErrorCode;
 import com.gotooop.presentation.common.response.code.ResultCode;
 import com.gotooop.presentation.common.response.code.SuccessCode;
 import org.junit.jupiter.api.DisplayName;
@@ -30,18 +30,19 @@ class ResponseTest {
     @DisplayName("실패 응답(ErrorResponse)은 비즈니스 코드, 메시지, 경로 및 상세 에러를 정확히 포함해야 한다")
     void errorResponse_ContainsAllErrorContext() {
         // given
-        ErrorCode errorCode = ErrorCode.NOT_FOUND;
+        String errorCode = HttpErrorCode.NOT_FOUND.getCode();
+        String message   = HttpErrorCode.NOT_FOUND.getMessage();
         String path = "/api/v1/posts/999";
         List<ErrorResponse.CustomFieldError> errors = List.of(
             new ErrorResponse.CustomFieldError("id", "999", "존재하지 않는 리소스입니다.")
         );
 
         // when
-        ErrorResponse response = ErrorResponse.of(errorCode, path, errors);
+        ErrorResponse response = ErrorResponse.of(errorCode, message, path, errors);
 
         // then
-        assertEquals(errorCode.getCode(), response.errorCode());
-        assertEquals(errorCode.getMessage(), response.message());
+        assertEquals(errorCode, response.errorCode());
+        assertEquals(message, response.message());
         assertEquals(path, response.path());
         assertEquals(1, response.errors().size());
         assertEquals("id", response.errors().get(0).field());
@@ -51,15 +52,16 @@ class ResponseTest {
     @DisplayName("필드 에러 없는 ErrorResponse 생성 시 errors는 빈 리스트여야 한다")
     void errorResponse_WithoutErrors_HasEmptyList() {
         // given
-        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        String errorCode = HttpErrorCode.BAD_REQUEST.getCode();
+        String message   = HttpErrorCode.BAD_REQUEST.getMessage();
         String path = "/api/v1/posts";
 
         // when
-        ErrorResponse response = ErrorResponse.of(errorCode, path);
+        ErrorResponse response = ErrorResponse.of(errorCode, message, path);
 
         // then
-        assertEquals(errorCode.getCode(), response.errorCode());
-        assertEquals(errorCode.getMessage(), response.message());
+        assertEquals(errorCode, response.errorCode());
+        assertEquals(message, response.message());
         assertEquals(path, response.path());
         assertTrue(response.errors().isEmpty());
     }
